@@ -1,5 +1,4 @@
 import axios from "axios";
-import dotenv from "dotenv";
 import { CompanySearch } from "./company";
 
 interface SearchResponse {
@@ -11,6 +10,7 @@ export const searchCompany = async (query: string) => {
     const data = await axios.get<SearchResponse>(
       `https://financialmodelingprep.com/api/v3/search?query=${query}&limit=10&exchange=NASDAQ&apikey=${process.env.REACT_APP_API_KEY}`
     );
+    return data;
   } catch (err) {
     if (axios.isAxiosError(err)) {
       console.log("ERROR: ", err.message);
