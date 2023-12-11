@@ -8,7 +8,7 @@ import { searchCompany } from "./api";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
-console.log(searchCompany("tsla"));
+
 root.render(
   <React.StrictMode>
     <App />
