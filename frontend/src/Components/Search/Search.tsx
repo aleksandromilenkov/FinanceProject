@@ -1,22 +1,22 @@
 import React, { ChangeEvent, useState } from "react";
 
-type Props = {};
+interface Props {
+  onHandleSearch: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onHandleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  search: string;
+}
 
-const Search: React.FC<Props> = (props: Props): JSX.Element => {
-  const [search, setSearch] = useState<string>("");
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-    console.log(search);
-  };
-  const handleSearch = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    console.log(e);
-  };
+const Search: React.FC<Props> = ({
+  onHandleChange,
+  onHandleSearch,
+  search,
+}: Props): JSX.Element => {
   return (
     <div>
-      <input type="text" onChange={(e) => handleChange(e)} value={search} />
+      <input type="text" onChange={(e) => onHandleChange(e)} value={search} />
       <button
         onClick={(e) => {
-          handleSearch(e);
+          onHandleSearch(e);
         }}
       >
         Search
