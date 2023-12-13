@@ -1,5 +1,6 @@
 import React from "react";
 import financeAppLogo from "./financeAppLogo.png";
+import { Link } from "react-router-dom";
 interface Props {}
 
 const Navbar = (props: Props) => {
@@ -7,11 +8,13 @@ const Navbar = (props: Props) => {
     <nav className="relative container mx-auto p-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-20">
-          <img src={financeAppLogo} alt="" />
+          <Link to={"/"}>
+            <img src={financeAppLogo} alt="" />
+          </Link>
           <div className="hidden font-bold lg:flex">
-            <a href="" className="text-black hover:text-darkBlue">
-              Dashboard
-            </a>
+            <Link to={"/search"} className="text-black hover:text-darkBlue">
+              Search
+            </Link>
           </div>
         </div>
         <div className="hidden lg:flex items-center space-x-6 text-back">
