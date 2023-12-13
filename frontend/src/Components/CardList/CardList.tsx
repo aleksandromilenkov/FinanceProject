@@ -12,7 +12,9 @@ const CardList = ({ searchResults, onPortfolioCreate }: Props) => {
   return (
     <div>
       {searchResults.length <= 0 ? (
-        <h1>No results found</h1>
+        <p className="mb-3 mt-3 text-xl font-semibold text-center md:text-xl">
+          No results!
+        </p>
       ) : (
         searchResults.map((result) => (
           <Card
