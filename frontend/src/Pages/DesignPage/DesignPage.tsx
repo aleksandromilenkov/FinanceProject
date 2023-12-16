@@ -1,8 +1,17 @@
 import React from "react";
 import Table from "../../Components/Table/Table";
 import RatioList from "../../Components/RatioList/RatioList";
+import { CompanyKeyMetrics } from "../../company";
+import { testIncomeStatementData } from "../../Components/Table/testData";
 
 type Props = {};
+
+const tableConfig = [
+  {
+    label: "Market Cap",
+    render: (company: CompanyKeyMetrics) => company.marketCapTTM,
+  },
+];
 
 const DesignPage = (props: Props) => {
   return (
@@ -12,7 +21,7 @@ const DesignPage = (props: Props) => {
         This is FinShark's Design page. This is where we will house various
         design aspects of the app
       </h2>
-      <RatioList />
+      <RatioList data={testIncomeStatementData} config={tableConfig} />
       <Table />;
       <h3>
         Table - Table takes in a configuration object and company data as
