@@ -1,5 +1,6 @@
 import React from "react";
 import Table from "../../Components/Table/Table";
+import RatioList from "../../Components/RatioList/RatioList";
 
 type Props = {};
 
@@ -11,7 +12,12 @@ const DesignPage = (props: Props) => {
         This is FinShark's Design page. This is where we will house various
         design aspects of the app
       </h2>
+      <RatioList />
       <Table />;
+      <h3>
+        Table - Table takes in a configuration object and company data as
+        params.
+      </h3>
     </>
   );
 };
