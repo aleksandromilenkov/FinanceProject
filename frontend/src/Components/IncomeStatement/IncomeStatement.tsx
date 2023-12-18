@@ -45,7 +45,7 @@ const IncomeStatement = (props: Props) => {
       {incomeData.length > 0 ? (
         <Table configs={configs} data={incomeData} />
       ) : (
-        <>Loading...</>
+        <>No Income Data</>
       )}
     </>
   );
