@@ -47,7 +47,7 @@ const BalanceSheet = (props: Props) => {
       setBalanceData(result?.data[0]);
     };
     getBalanceSheetData();
-  }, []);
+  }, [ticker]);
   return (
     <div>
       {balanceData ? (

@@ -49,7 +49,7 @@ const CashflowStatement = (props: Props) => {
       setCashflowData(result!.data);
     };
     getCashflowData();
-  }, []);
+  }, [ticker]);
   return (
     <>
       {cashflowData ? (

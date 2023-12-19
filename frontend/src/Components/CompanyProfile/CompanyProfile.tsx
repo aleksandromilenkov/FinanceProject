@@ -43,7 +43,7 @@ const CompanyProfile = (props: Props) => {
       setCompanyData(value?.data[0]);
     };
     getCompanyKeyMetrics();
-  }, []);
+  }, [ticker]);
   return (
     <>
       {companyData ? (

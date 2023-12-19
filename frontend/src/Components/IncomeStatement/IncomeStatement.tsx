@@ -4,6 +4,7 @@ import { useOutletContext } from "react-router";
 import { getIncomeStatement } from "../../api";
 import RatioList from "../RatioList/RatioList";
 import Table from "../Table/Table";
+import Spinner from "../Spinner/Spinner";
 
 type Props = {};
 
@@ -39,13 +40,13 @@ const IncomeStatement = (props: Props) => {
       setIncomeData(result!.data);
     };
     getIncomeData();
-  }, []);
+  }, [ticker]);
   return (
     <>
       {incomeData.length > 0 ? (
         <Table configs={configs} data={incomeData} />
       ) : (
-        <>No Income Data</>
+        <Spinner />
       )}
     </>
   );

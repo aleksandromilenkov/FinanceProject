@@ -21,7 +21,7 @@ const Search: React.FC<Props> = ({
           <input
             className="flex-1 p-3 border-2 rounded-lg placeholder-black focus:outline-none"
             id="search-input"
-            placeholder="Search companies"
+            placeholder="Search companies (tesla, microsoft, apple...)"
             value={search}
             onChange={handleSearchChange}
           ></input>
