@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.DTO.Stock;
+using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,14 +22,14 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Stock>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<StockDTO>))]
         public IActionResult GetStocks()
         {
-            var stocks = _context.Stocks.ToList();
+            var stocks = _context.Stocks.ToList().Select(s => s.ToStockDto());
             return Ok(stocks);
         }
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(Stock))]
+        [ProducesResponseType(200, Type = typeof(StockDTO))]
         [ProducesResponseType(400)]
         public IActionResult GetStockById([FromRoute] int id)
         {
@@ -42,7 +44,7 @@ namespace api.Controllers
                 return NotFound();
             }
 
-            return Ok(stock);
+            return Ok(stock.ToStockDto());
         }
     }
 }
