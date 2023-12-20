@@ -28,7 +28,7 @@ namespace api.Controllers
             var stocks = _context.Stocks.ToList().Select(s => s.ToStockDto());
             return Ok(stocks);
         }
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), ActionName("GetById")]
         [ProducesResponseType(200, Type = typeof(StockDTO))]
         [ProducesResponseType(400)]
         public IActionResult GetStockById([FromRoute] int id)
@@ -45,6 +45,21 @@ namespace api.Controllers
             }
 
             return Ok(stock.ToStockDto());
+        }
+
+        [HttpPost]
+        [ProducesResponseType(201, Type = typeof(StockDTO))]
+        [ProducesResponseType(400)]
+        public IActionResult CreateStock([FromBody] CreateStockRequestDTO stockDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var stockModel = stockDto.ToStockFromCreateStockDTO();
+            _context.Stocks.Add(stockModel);
+            _context.SaveChanges();
+            return CreatedAtAction("GetById", new { id = stockModel.Id }, stockModel.ToStockDto());
         }
     }
 }
