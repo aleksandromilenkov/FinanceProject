@@ -7,6 +7,7 @@ using api.DTO.Stock;
 using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -60,6 +61,60 @@ namespace api.Controllers
             _context.Stocks.Add(stockModel);
             _context.SaveChanges();
             return CreatedAtAction("GetById", new { id = stockModel.Id }, stockModel.ToStockDto());
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(200, Type = typeof(StockDTO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public IActionResult UpdateStock([FromRoute] int id, [FromBody] UpdateStockRequestDTO stockDto)
+        {
+            if (id != stockDto.Id)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var stockToUpdate = _context.Stocks.AsNoTracking().Where(s => s.Id == id).FirstOrDefault();
+            if (stockToUpdate == null)
+            {
+                return NotFound();
+            }
+            Stock toStock = stockDto.ToStockFromUpdateStockDTO();
+            _context.Stocks.Update(toStock);
+            if (_context.SaveChanges() <= 0)
+            {
+                ModelState.AddModelError("", "Something went wrong");
+                return StatusCode(500, ModelState);
+            }
+            return Ok("Successfully updated");
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteStock([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var stock = _context.Stocks.AsNoTracking().Where(s => s.Id == id).FirstOrDefault();
+            if (stock == null)
+            {
+                return NotFound();
+            }
+            _context.Stocks.Remove(stock);
+            if (_context.SaveChanges() <= 0)
+            {
+                ModelState.AddModelError("", "Something went wrong");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
         }
     }
 }
