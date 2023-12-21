@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.DTO.Stock;
+using api.Interfaces;
 using api.Mappers;
 using api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,18 +16,18 @@ namespace api.Controllers
     [ApiController]
     public class StockController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IStockRepository _stockRepository;
 
-        public StockController(ApplicationDbContext context)
+        public StockController(IStockRepository stockRepository)
         {
-            _context = context;
+            _stockRepository = stockRepository;
         }
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<StockDTO>))]
         public async Task<IActionResult> GetStocks()
         {
-            var stocks = await _context.Stocks.ToListAsync();
+            var stocks = await _stockRepository.GetStocks();
             var stocksDto = stocks.Select(s => s.ToStockDto());
             return Ok(stocksDto);
         }
@@ -40,7 +41,7 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var stock = await _context.Stocks.FindAsync(id);
+            var stock = await _stockRepository.GetStockById(id);
             if (stock == null)
             {
                 return NotFound();
@@ -59,9 +60,14 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
             var stockModel = stockDto.ToStockFromCreateStockDTO();
-            await _context.Stocks.AddAsync(stockModel);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetById", new { id = stockModel.Id }, stockModel.ToStockDto());
+            if (await _stockRepository.CreateStock(stockModel))
+            {
+                return CreatedAtAction("GetById", new { id = stockModel.Id }, stockModel.ToStockDto());
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
         [HttpPut("{id}")]
@@ -79,14 +85,13 @@ namespace api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var stockToUpdate = await _context.Stocks.AsNoTracking().Where(s => s.Id == id).FirstOrDefaultAsync();
-            if (stockToUpdate == null)
+            if (!await _stockRepository.StockExists(id))
             {
                 return NotFound();
             }
             Stock toStock = stockDto.ToStockFromUpdateStockDTO();
-            _context.Stocks.Update(toStock);
-            if (await _context.SaveChangesAsync() <= 0)
+
+            if (!await _stockRepository.UpdateStock(toStock))
             {
                 ModelState.AddModelError("", "Something went wrong");
                 return StatusCode(500, ModelState);
@@ -104,13 +109,13 @@ namespace api.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var stock = await _context.Stocks.AsNoTracking().Where(s => s.Id == id).FirstOrDefaultAsync();
-            if (stock == null)
+
+            if (!await _stockRepository.StockExists(id))
             {
                 return NotFound();
             }
-            _context.Stocks.Remove(stock);
-            if (await _context.SaveChangesAsync() <= 0)
+            Stock stock = await _stockRepository.GetStockById(id);
+            if (!await _stockRepository.DeleteStock(stock))
             {
                 ModelState.AddModelError("", "Something went wrong");
                 return StatusCode(500, ModelState);
