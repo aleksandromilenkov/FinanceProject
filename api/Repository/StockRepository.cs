@@ -31,12 +31,12 @@ namespace api.Repository
 
         public async Task<Stock> GetStockById(int id)
         {
-            return await _context.Stocks.Where(s => s.Id == id).FirstOrDefaultAsync();
+            return await _context.Stocks.Where(s => s.Id == id).Include(s => s.Comments).FirstOrDefaultAsync();
         }
 
         public async Task<ICollection<Stock>> GetStocks()
         {
-            return await _context.Stocks.ToListAsync();
+            return await _context.Stocks.Include(s => s.Comments).ToListAsync();
         }
 
         public async Task<bool> Save()

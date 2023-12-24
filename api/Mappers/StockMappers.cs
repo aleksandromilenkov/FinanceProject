@@ -20,6 +20,7 @@ namespace api.Mappers
                 Purchase = stockModel.Purchase,
                 MarketCup = stockModel.MarketCup,
                 Industry = stockModel.Industry,
+                Comments = stockModel.Comments.Select(s => s.ToCommentDTO()).ToList()
             };
         }
 
