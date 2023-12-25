@@ -62,5 +62,33 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
         }
+
+        [HttpPut("{commentId}")]
+        public async Task<IActionResult> UpdateComment([FromRoute] int commentId, [FromBody] UpdateCommentRequestDTO updatedComment)
+        {
+            if (commentId < 0)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!await _commentRepository.CommentExists(commentId))
+            {
+                return BadRequest("Comment does not exists");
+            }
+            Comment oldComment = await _commentRepository.GetByIdAsyncAsNoTracking(commentId);
+            Comment comment = updatedComment.ToCommentFromUpdateCommentDTO(oldComment.Id, (int)oldComment.StockId);
+            if (await _commentRepository.UpdateComment(comment))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
     }
 }

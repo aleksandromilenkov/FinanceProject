@@ -19,6 +19,11 @@ namespace api.Repository
             _context = context;
         }
 
+        public async Task<bool> CommentExists(int id)
+        {
+            return await _context.Comments.AnyAsync(c => c.Id == id);
+        }
+
         public async Task<bool> CreateComment(Comment comment)
         {
             await _context.Comments.AddAsync(comment);
@@ -35,9 +40,20 @@ namespace api.Repository
             return await _context.Comments.FindAsync(id);
         }
 
+        public async Task<Comment> GetByIdAsyncAsNoTracking(int id)
+        {
+            return await _context.Comments.Where(c => c.Id == id).AsNoTracking().FirstOrDefaultAsync();
+        }
+
         public async Task<bool> Save()
         {
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdateComment(Comment comment)
+        {
+            _context.Comments.Update(comment);
+            return await Save();
         }
     }
 }
