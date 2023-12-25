@@ -31,7 +31,7 @@ namespace api.Controllers
             var stocksDto = stocks.Select(s => s.ToStockDto());
             return Ok(stocksDto);
         }
-        [HttpGet("{id}"), ActionName("GetById")]
+        [HttpGet("{id:int}"), ActionName("GetById")]
         [ProducesResponseType(200, Type = typeof(StockDTO))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetStockById([FromRoute] int id)
@@ -70,7 +70,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         [ProducesResponseType(200, Type = typeof(StockDTO))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -99,7 +99,7 @@ namespace api.Controllers
             return Ok("Successfully updated");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

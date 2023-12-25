@@ -33,15 +33,24 @@ namespace api.Controllers
             return Ok(commentDTO);
         }
 
-        [HttpGet("{id}"), ActionName("GetComment")]
+        [HttpGet("{id:int}"), ActionName("GetComment")]
         [ProducesResponseType(200, Type = typeof(Comment))]
         public async Task<IActionResult> GetComment([FromRoute] int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!await _commentRepository.CommentExists(id))
+            {
+                return BadRequest("No comment found with this Id");
+            }
             var comment = await _commentRepository.GetByIdAsync(id);
+
             return Ok(comment);
         }
 
-        [HttpPost("{stockId}")]
+        [HttpPost("{stockId:int}")]
         public async Task<IActionResult> CreateComment([FromRoute] int stockId, CreateCommentRequestDTO comment)
         {
             if (!ModelState.IsValid)
@@ -63,7 +72,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("{commentId}")]
+        [HttpPut("{commentId:int}")]
         public async Task<IActionResult> UpdateComment([FromRoute] int commentId, [FromBody] UpdateCommentRequestDTO updatedComment)
         {
             if (commentId < 0)
@@ -91,7 +100,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpDelete("{commentId}")]
+        [HttpDelete("{commentId:int}")]
         public async Task<IActionResult> DeleteComment(int commentId)
         {
             if (commentId < 0)
