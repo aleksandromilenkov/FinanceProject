@@ -30,6 +30,12 @@ namespace api.Repository
             return await Save();
         }
 
+        public async Task<bool> DeleteComment(Comment comment)
+        {
+            _context.Comments.Remove(comment);
+            return await Save();
+        }
+
         public async Task<List<Comment>> GetAllComments()
         {
             return await _context.Comments.ToListAsync();

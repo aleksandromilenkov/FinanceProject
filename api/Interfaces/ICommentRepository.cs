@@ -15,6 +15,7 @@ namespace api.Interfaces
         Task<bool> CommentExists(int id);
         Task<bool> CreateComment(Comment comment);
         Task<bool> UpdateComment(Comment comment);
+        Task<bool> DeleteComment(Comment comment);
         Task<bool> Save();
     }
 }

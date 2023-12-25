@@ -90,5 +90,31 @@ namespace api.Controllers
                 return BadRequest(ModelState);
             }
         }
+
+        [HttpDelete("{commentId}")]
+        public async Task<IActionResult> DeleteComment(int commentId)
+        {
+            if (commentId < 0)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!await _commentRepository.CommentExists(commentId))
+            {
+                return BadRequest("Comment does not exists");
+            }
+            Comment comment = await _commentRepository.GetByIdAsyncAsNoTracking(commentId);
+            if (await _commentRepository.DeleteComment(comment))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
     }
 }
