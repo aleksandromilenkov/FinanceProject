@@ -16,10 +16,12 @@ namespace api.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentRepository _commentRepository;
+        private readonly IStockRepository _stockRepository;
 
-        public CommentController(ICommentRepository commentRepository)
+        public CommentController(ICommentRepository commentRepository, IStockRepository stockRepository)
         {
             _commentRepository = commentRepository;
+            _stockRepository = stockRepository;
         }
 
         [HttpGet]
@@ -31,12 +33,34 @@ namespace api.Controllers
             return Ok(commentDTO);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), ActionName("GetComment")]
         [ProducesResponseType(200, Type = typeof(Comment))]
         public async Task<IActionResult> GetComment([FromRoute] int id)
         {
             var comment = await _commentRepository.GetByIdAsync(id);
             return Ok(comment);
+        }
+
+        [HttpPost("{stockId}")]
+        public async Task<IActionResult> CreateComment([FromRoute] int stockId, CreateCommentRequestDTO comment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!await _stockRepository.StockExists(stockId))
+            {
+                return BadRequest("Stock does not exists");
+            }
+            Comment comment1 = comment.ToCommentFromCreateCommentDTO(stockId);
+            if (await _commentRepository.CreateComment(comment1))
+            {
+                return CreatedAtAction("GetComment", new { id = comment1.Id }, comment1.ToCommentDTO());
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
     }
 }
