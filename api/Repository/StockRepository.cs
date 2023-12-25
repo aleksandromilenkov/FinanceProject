@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Helpers;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -34,9 +35,19 @@ namespace api.Repository
             return await _context.Stocks.Where(s => s.Id == id).Include(s => s.Comments).FirstOrDefaultAsync();
         }
 
-        public async Task<ICollection<Stock>> GetStocks()
+        public async Task<ICollection<Stock>> GetStocks(QueryObject query)
         {
-            return await _context.Stocks.Include(s => s.Comments).ToListAsync();
+            var stocks = _context.Stocks.Include(s => s.Comments).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.CompanyName))
+            {
+                stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
+            }
+            else if (!string.IsNullOrWhiteSpace(query.Symbol))
+            {
+                stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
+
+            }
+            return await stocks.ToListAsync();
         }
 
         public async Task<bool> Save()

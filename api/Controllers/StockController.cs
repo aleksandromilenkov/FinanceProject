@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.DTO.Stock;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -25,9 +26,9 @@ namespace api.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<StockDTO>))]
-        public async Task<IActionResult> GetStocks()
+        public async Task<IActionResult> GetStocks([FromQuery] QueryObject query)
         {
-            var stocks = await _stockRepository.GetStocks();
+            var stocks = await _stockRepository.GetStocks(query);
             var stocksDto = stocks.Select(s => s.ToStockDto());
             return Ok(stocksDto);
         }
