@@ -18,6 +18,16 @@ namespace api.Repository
             _context = context;
         }
 
+        public async Task<Portfolio> GetUserPortfolioByUserId(string userId)
+        {
+            return await _context.Portfolios.Where(p => p.AppUserId == userId).FirstOrDefaultAsync();
+        }
+
+        public async Task<Portfolio> GetUserPortfolioByStockId(int stockId)
+        {
+            return await _context.Portfolios.Where(p => p.StockId == stockId).FirstOrDefaultAsync();
+        }
+
         public async Task<Portfolio> CreatePortfolio(Portfolio portfolio)
         {
             await _context.Portfolios.AddAsync(portfolio);
@@ -28,6 +38,13 @@ namespace api.Repository
         public async Task<List<Stock>> GetUserPortfolio(AppUser user)
         {
             return await _context.Portfolios.Where(p => p.AppUserId == user.Id).Select(p => p.Stock).ToListAsync();
+        }
+
+        public async Task<Portfolio> DeletePortfolio(Portfolio portfolio)
+        {
+            _context.Portfolios.Remove(portfolio);
+            await _context.SaveChangesAsync();
+            return portfolio;
         }
     }
 }
