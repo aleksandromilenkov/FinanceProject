@@ -52,5 +52,19 @@ namespace api.Mappers
                 Industry = stockDTO.Industry,
             };
         }
+
+        public static Stock ToStockFromFMP(this FMPStock fmpStock)
+        {
+            return new Stock
+            {
+                Symbol = fmpStock.symbol,
+                LastDiv = (decimal)fmpStock.lastDiv,
+                CompanyName = fmpStock.companyName,
+                Purchase = (decimal)fmpStock.price,
+                MarketCup = fmpStock.mktCap,
+                Industry = fmpStock.industry,
+            };
+        }
+
     }
 }

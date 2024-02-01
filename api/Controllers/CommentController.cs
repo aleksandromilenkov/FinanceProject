@@ -19,12 +19,14 @@ namespace api.Controllers
     {
         private readonly ICommentRepository _commentRepository;
         private readonly IStockRepository _stockRepository;
+        private readonly IFMPService _fmpService;
         private readonly UserManager<AppUser> _userManager;
 
-        public CommentController(UserManager<AppUser> userManager, ICommentRepository commentRepository, IStockRepository stockRepository)
+        public CommentController(UserManager<AppUser> userManager, ICommentRepository commentRepository, IStockRepository stockRepository, IFMPService fmpService)
         {
             _commentRepository = commentRepository;
             _stockRepository = stockRepository;
+            _fmpService = fmpService;
             _userManager = userManager;
         }
 
@@ -54,20 +56,31 @@ namespace api.Controllers
             return Ok(comment);
         }
 
-        [HttpPost("{stockId:int}")]
-        public async Task<IActionResult> CreateComment([FromRoute] int stockId, CreateCommentRequestDTO comment)
+        [HttpPost("{symbol:alpha}")]
+        public async Task<IActionResult> CreateComment([FromRoute] string symbol, CreateCommentRequestDTO comment)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (!await _stockRepository.StockExists(stockId))
+            var stock = await _stockRepository.GetStockBySymbol(symbol);
+            if (stock == null)
             {
-                return BadRequest("Stock does not exists");
+                stock = await _fmpService.FindStockBySymbolAsync(symbol);
+                if (stock == null)
+                {
+                    return BadRequest("Cant create comment for this stock");
+                }
+                await _stockRepository.CreateStock(stock);
+                stock = await _stockRepository.GetStockBySymbol(symbol);
+            }
+            if (stock == null)
+            {
+                return BadRequest("Cant create comment for this stock");
             }
             var username = User.GetUsername();
             var appUser = await _userManager.FindByNameAsync(username);
-            Comment comment1 = comment.ToCommentFromCreateCommentDTO(stockId);
+            Comment comment1 = comment.ToCommentFromCreateCommentDTO(stock.Id);
             comment1.AppUserId = appUser.Id;
             if (await _commentRepository.CreateComment(comment1))
             {

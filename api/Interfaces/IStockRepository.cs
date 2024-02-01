@@ -11,6 +11,7 @@ namespace api.Interfaces
     {
         Task<ICollection<Stock>> GetStocks(QueryObject query);
         Task<Stock> GetStockById(int id);
+        Task<Stock> GetStockBySymbol(string symbol);
         Task<bool> StockExists(int id);
         Task<bool> CreateStock(Stock stock);
         Task<bool> UpdateStock(Stock stock);
