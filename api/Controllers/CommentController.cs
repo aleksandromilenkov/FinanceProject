@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.DTO.Comment;
 using api.Extensions;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -32,9 +33,9 @@ namespace api.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<CommentDTO>))]
-        public async Task<IActionResult> GetComments()
+        public async Task<IActionResult> GetComments([FromQuery] QueryCommentObject queryCommentObject)
         {
-            var comments = await _commentRepository.GetAllComments();
+            var comments = await _commentRepository.GetAllComments(queryCommentObject);
             var commentDTO = comments.Select(c => c.ToCommentDTO());
             return Ok(commentDTO);
         }

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.DTO.Comment;
+using api.Helpers;
 using api.Models;
 
 namespace api.Interfaces
 {
     public interface ICommentRepository
     {
-        Task<List<Comment>> GetAllComments();
+        Task<List<Comment>> GetAllComments(QueryCommentObject queryCommentObject);
         Task<Comment> GetByIdAsync(int id);
         Task<Comment> GetByIdAsyncAsNoTracking(int id);
         Task<bool> CommentExists(int id);
