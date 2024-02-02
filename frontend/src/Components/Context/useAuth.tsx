@@ -63,24 +63,22 @@ export const UserProvider = ({ children }: Props) => {
   };
 
   const loginUser = async (username: string, password: string) => {
-    try {
-      const resp = await loginAPI(username, password);
-      const data = await resp;
-      if (data) {
-        localStorage.setItem("token", data?.data.token);
-        const userObj = {
-          username: data?.data.username,
-          email: data?.data.email,
-        };
-        localStorage.setItem("user", JSON.stringify(userObj));
-        setToken(data?.data.token!);
-        setUser(userObj!);
-        toast.success("Login successfully.");
-        navigate("/search");
-      }
-    } catch (err) {
-      toast.warning("Server error occured.");
-    }
+    await loginAPI(username, password)
+      .then((res) => {
+        if (res) {
+          localStorage.setItem("token", res?.data.token);
+          const userObj = {
+            username: res?.data.username,
+            email: res?.data.email,
+          };
+          localStorage.setItem("user", JSON.stringify(userObj));
+          setToken(res?.data.token!);
+          setUser(userObj!);
+          toast.success("Login successfully.");
+          navigate("/search");
+        }
+      })
+      .catch((e) => toast.warning("Server error occured"));
   };
 
   const isLoggedIn = () => {
