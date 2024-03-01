@@ -39,16 +39,16 @@ export const UserProvider = ({ children }: Props) => {
 
   const registerUser = async (
     email: string,
-    username: string,
+    userName: string,
     password: string
   ) => {
     try {
-      const resp = await registerAPI(email, username, password);
+      const resp = await registerAPI(email, userName, password);
       const data = await resp;
       if (data) {
         localStorage.setItem("token", data?.data.token);
         const userObj = {
-          username: data?.data.username,
+          username: data?.data.userName,
           email: data?.data.email,
         };
         localStorage.setItem("user", JSON.stringify(userObj));
@@ -62,13 +62,13 @@ export const UserProvider = ({ children }: Props) => {
     }
   };
 
-  const loginUser = async (username: string, password: string) => {
-    await loginAPI(username, password)
+  const loginUser = async (userName: string, password: string) => {
+    await loginAPI(userName, password)
       .then((res) => {
         if (res) {
           localStorage.setItem("token", res?.data.token);
           const userObj = {
-            username: res?.data.username,
+            username: res?.data.userName,
             email: res?.data.email,
           };
           localStorage.setItem("user", JSON.stringify(userObj));
@@ -90,7 +90,6 @@ export const UserProvider = ({ children }: Props) => {
     localStorage.removeItem("user");
     setUser(null);
     setToken("");
-    navigate("/");
   };
 
   return (
