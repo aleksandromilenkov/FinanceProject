@@ -80,3 +80,4 @@ E:\My-Program-Languages\FinShark\api\bin\Debug\net7.0\Newtonsoft.Json.dll
 E:\My-Program-Languages\FinShark\api\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
 E:\My-Program-Languages\FinShark\api\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\My-Program-Languages\FinShark\api\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+E:\My-Program-Languages\FinShark\api\obj\Debug\net7.0\api.sourcelink.json

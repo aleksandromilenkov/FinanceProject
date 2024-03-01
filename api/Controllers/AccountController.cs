@@ -63,7 +63,7 @@ namespace api.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                var userAlreadyExists = _userManager.FindByEmailAsync(registerDTO.Email);
+                var userAlreadyExists = await _userManager.FindByEmailAsync(registerDTO.Email);
                 if (userAlreadyExists != null)
                 {
                     return BadRequest("User already exists.");
