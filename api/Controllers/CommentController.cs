@@ -8,6 +8,7 @@ using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,7 @@ namespace api.Controllers
         }
 
         [HttpPost("{symbol:alpha}")]
+        [Authorize]
         public async Task<IActionResult> CreateComment([FromRoute] string symbol, CreateCommentRequestDTO comment)
         {
             if (!ModelState.IsValid)
