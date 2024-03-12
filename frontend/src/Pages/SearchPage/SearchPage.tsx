@@ -68,9 +68,7 @@ const SearchPage = (props: Props) => {
   };
   const onPortfolioDelete = async (e: any) => {
     e.preventDefault();
-    console.log("ASD");
     try {
-      console.log(e.target.name.value);
       const data = await portfolioDeleteAPI(e.target.name.value);
       console.log(data?.status.toString().startsWith("2"));
       if (data?.status.toString().startsWith("2")) {
