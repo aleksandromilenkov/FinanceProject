@@ -1,4 +1,4 @@
-import React, { ChangeEvent, SyntheticEvent, useState } from "react";
+import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from "react";
 import { searchCompany } from "../../api";
 import Navbar from "../../Components/Navbar/Navbar";
 import Hero from "../../Components/Hero/Hero";
@@ -6,14 +6,37 @@ import ListPortfolio from "../../Components/Portfolio/ListPortfolio/ListPortfoli
 import Search from "../../Components/Search/Search";
 import CardList from "../../Components/CardList/CardList";
 import { CompanySearch } from "../../company";
+import { PortfolioGet } from "../../Models/Portfolio";
+import {
+  portfolioAddAPI,
+  portfolioDeleteAPI,
+  portfolioGetAPI,
+} from "../../Components/Services/PortfolioService";
+import { toast } from "react-toastify";
 
 interface Props {}
 
 const SearchPage = (props: Props) => {
   const [search, setSearch] = useState<string>("");
   const [searchResult, setSearchResult] = useState<CompanySearch[]>([]);
-  const [portfolioValues, setPortfolioValues] = useState<string[]>([]);
+  const [portfolioValues, setPortfolioValues] = useState<PortfolioGet[] | null>(
+    []
+  );
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const getPortfolio = async () => {
+    try {
+      const data = await portfolioGetAPI();
+      if (data?.data) {
+        setPortfolioValues(data.data);
+      }
+    } catch (err) {
+      toast.warning("Could not get porftolio values.");
+    }
+  };
+  useEffect(() => {
+    getPortfolio();
+  }, []);
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
@@ -30,17 +53,33 @@ const SearchPage = (props: Props) => {
     console.log("THE RESULT.DATA IS: ", searchResult);
   };
 
-  const onPortfolioCreate = (e: any) => {
+  const onPortfolioCreate = async (e: any) => {
     e.preventDefault();
-    console.log(e.target.symbol.value);
-    if (portfolioValues.includes(e.target.symbol.value)) return;
-    setPortfolioValues((prevState) => [...prevState, e.target.symbol.value]);
+    try {
+      console.log(e.target.symbol.value);
+      const data = await portfolioAddAPI(e.target.symbol.value);
+      if (data?.status.toString().startsWith("2")) {
+        toast.success("Stock added to portfolio!");
+        getPortfolio();
+      }
+    } catch (err) {
+      toast.warning("Stock can not be added to portfolio!");
+    }
   };
-  const onPortfolioDelete = (e: any) => {
+  const onPortfolioDelete = async (e: any) => {
     e.preventDefault();
-    setPortfolioValues((prevState) => {
-      return prevState.filter((val) => val !== e.target.name.value);
-    });
+    console.log("ASD");
+    try {
+      console.log(e.target.name.value);
+      const data = await portfolioDeleteAPI(e.target.name.value);
+      console.log(data?.status.toString().startsWith("2"));
+      if (data?.status.toString().startsWith("2")) {
+        toast.success("Stock deleted from portfolio!");
+        getPortfolio();
+      }
+    } catch (err) {
+      toast.warning("Stock can not be deleted from portfolio!");
+    }
   };
   return (
     <div className="App">
@@ -51,7 +90,7 @@ const SearchPage = (props: Props) => {
         handleSearchChange={handleSearchChange}
       />
       <ListPortfolio
-        portfolioValues={portfolioValues}
+        portfolioValues={portfolioValues!}
         onPortfolioDelete={onPortfolioDelete}
       />
       {serverError && <h3>Network Error. Please check Internet Connection</h3>}

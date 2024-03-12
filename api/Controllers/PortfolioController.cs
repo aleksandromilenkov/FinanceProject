@@ -39,9 +39,9 @@ namespace api.Controllers
             return Ok(userPortfolio);
         }
 
-        [HttpPost("{symbol}")]
+        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CrteateUserPortfolio([FromRoute] string symbol)
+        public async Task<IActionResult> CrteateUserPortfolio(string symbol)
         {
             var username = User.GetUsername();
             var appUser = await _userManager.FindByNameAsync(username);
