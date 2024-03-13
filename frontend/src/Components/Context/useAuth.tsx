@@ -28,6 +28,8 @@ export const UserProvider = ({ children }: Props) => {
   useEffect(() => {
     const user = localStorage.getItem("user");
     const token = localStorage.getItem("token");
+    console.log(JSON.parse(user!));
+    console.log(token);
     if (user && token) {
       setUser(JSON.parse(user));
       setToken(token);
@@ -35,7 +37,7 @@ export const UserProvider = ({ children }: Props) => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     }
     setIsReady(true);
-  }, []);
+  }, [token]);
 
   const registerUser = async (
     email: string,
@@ -73,10 +75,12 @@ export const UserProvider = ({ children }: Props) => {
             username: res?.data.userName,
             email: res?.data.email,
           };
+          console.log(userObj.username, userObj.email);
           localStorage.setItem("user", JSON.stringify(userObj));
           setToken(res?.data.token!);
           setUser(userObj!);
           toast.success("Login successfully.");
+          console.log("Will");
           navigate("/search");
         }
       })

@@ -27,6 +27,8 @@ export const portfolioDeleteAPI = async (symbol: string) => {
 export const portfolioGetAPI = async () => {
   try {
     const data = await axios.get<PortfolioGet[]>(api);
+    console.log("Fetching portfolio...");
+    console.log(data);
     return data;
   } catch (error) {
     handleError(error);

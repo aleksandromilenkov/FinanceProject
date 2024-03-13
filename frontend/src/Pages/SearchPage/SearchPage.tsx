@@ -27,6 +27,8 @@ const SearchPage = (props: Props) => {
   const getPortfolio = async () => {
     try {
       const data = await portfolioGetAPI();
+      console.log("getting portfolio");
+      console.log(data);
       if (data?.data) {
         setPortfolioValues(data.data);
       }
