@@ -6,7 +6,7 @@ The app is using data from financialmodelingprep.com's free API.
 Every user can Add stock to their own portfolio and remove it if he likes.  
 Every user can leave a comment in the stock's page.  
 
-I'm using React.js with TailwindCss for the UI and ASP.NET Web API for the backend with Microsoft SQl Server Database.  
+I'm using React.js with TypeScript and TailwindCss for the UI and ASP.NET Web API for the backend with Microsoft SQl Server Database.  
 
 In the frontend i'm using the following npm packages:  
 1. Axios - for better manipulating with my API  
