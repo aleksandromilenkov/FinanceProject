@@ -3,6 +3,7 @@ FinShark is a Finance App where you can Register, Login, Search, Comment and mor
 The user once loged in, can read stock data from every company.  
 Even you can check their 10K Forms which are 100% accurate because they are displaying data from the archives of www.sec.gov  
 The app is using data from financialmodelingprep.com's free API.  
+You can search for stock companies using their ticker also! For example instead of Apple you can search by Apple's ticker and that is AAPL  
 Every user can Add stock to their own portfolio and remove it if he likes.  
 Every user can leave a comment in the stock's page.  
 
